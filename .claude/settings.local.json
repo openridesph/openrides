@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd \"C:/Users/unabi/OneDrive/Desktop/OpenRides/openrides\" && bun x ultracite fix apps/native/app/_layout.tsx apps/native/app/\\\\\\(drawer\\\\\\)/_layout.tsx apps/native/app/\\\\\\(drawer\\\\\\)/index.tsx 2>&1)"
+    ]
+  }
+}

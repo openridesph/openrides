@@ -4,6 +4,7 @@ import {
 	Authenticated,
 	AuthLoading,
 	Unauthenticated,
+	useConvexAuth,
 	useQuery,
 } from "convex/react";
 import { useState } from "react";
@@ -18,14 +19,34 @@ export const Route = createFileRoute("/dashboard")({
 
 function RouteComponent() {
 	const [showSignIn, setShowSignIn] = useState(false);
-	const privateData = useQuery(api.privateData.get);
+	const { isAuthenticated } = useConvexAuth();
+	const profileData = useQuery(
+		api.openrides.getMyProfile,
+		isAuthenticated ? {} : "skip"
+	);
+	const profile = profileData?.profile;
 
 	return (
 		<>
 			<Authenticated>
-				<div>
-					<h1>Dashboard</h1>
-					<p>privateData: {privateData?.message}</p>
+				<div className="mx-auto mt-10 grid w-full max-w-3xl gap-4 px-4">
+					<h1 className="font-bold text-3xl">OpenRides Dashboard</h1>
+					{profile?.isAdmin ? (
+						<p className="rounded-md border border-amber-300 bg-amber-50 p-3 text-amber-800 text-sm">
+							System Admin enabled for this account.
+						</p>
+					) : null}
+					<div className="grid gap-3 md:grid-cols-3">
+						<a className="rounded-md border p-4" href="/passenger">
+							Passenger Workspace
+						</a>
+						<a className="rounded-md border p-4" href="/rider">
+							Rider Workspace
+						</a>
+						<a className="rounded-md border p-4" href="/admin">
+							Admin Workspace
+						</a>
+					</div>
 					<UserMenu />
 				</div>
 			</Authenticated>

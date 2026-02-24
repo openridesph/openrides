@@ -1,91 +1,84 @@
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { Link } from "expo-router";
+import {
+	Ionicons,
+	MaterialCommunityIcons,
+	MaterialIcons,
+} from "@expo/vector-icons";
+import { api } from "@openrides/backend/convex/_generated/api";
+import { useQuery } from "convex/react";
 import { Drawer } from "expo-router/drawer";
-import { useThemeColor } from "heroui-native";
-import { useCallback } from "react";
-import { Pressable, Text } from "react-native";
+import { authClient } from "@/lib/auth-client";
 
-import { ThemeToggle } from "@/components/theme-toggle";
+const DrawerLayout = () => {
+	const { data: session, isPending } = authClient.useSession();
+	const profileData = useQuery(
+		api.openrides.getMyProfile,
+		!session || isPending ? "skip" : {}
+	);
 
-function DrawerLayout() {
-	const themeColorForeground = useThemeColor("foreground");
-	const themeColorBackground = useThemeColor("background");
-
-	const renderThemeToggle = useCallback(() => <ThemeToggle />, []);
+	const isRider = profileData?.profile?.roles.includes("rider") ?? false;
+	const isAdmin = profileData?.profile?.isAdmin ?? false;
 
 	return (
 		<Drawer
-			screenOptions={{
-				headerTintColor: themeColorForeground,
-				headerStyle: { backgroundColor: themeColorBackground },
-				headerTitleStyle: {
-					fontWeight: "600",
-					color: themeColorForeground,
-				},
-				headerRight: renderThemeToggle,
-				drawerStyle: { backgroundColor: themeColorBackground },
-			}}
+			screenOptions={{ sceneContainerStyle: { backgroundColor: "white" } }}
 		>
+			<Drawer.Screen
+				name="todos"
+				options={{ drawerItemStyle: { display: "none" } }}
+			/>
+			<Drawer.Screen
+				name="(tabs)"
+				options={{ drawerItemStyle: { display: "none" } }}
+			/>
 			<Drawer.Screen
 				name="index"
 				options={{
 					headerTitle: "Home",
-					drawerLabel: ({ color, focused }) => (
-						<Text style={{ color: focused ? color : themeColorForeground }}>
-							Home
-						</Text>
+					drawerLabel: "Home",
+					drawerIcon: ({ size, color }) => (
+						<Ionicons color={color} name="home-outline" size={size} />
 					),
-					drawerIcon: ({ size, color, focused }) => (
-						<Ionicons
-							color={focused ? color : themeColorForeground}
-							name="home-outline"
+				}}
+			/>
+			<Drawer.Screen
+				name="passenger"
+				options={{
+					headerTitle: "Passenger Dashboard",
+					drawerLabel: "Passenger",
+					drawerIcon: ({ size, color }) => (
+						<MaterialCommunityIcons
+							color={color}
+							name="account-heart-outline"
 							size={size}
 						/>
 					),
 				}}
 			/>
 			<Drawer.Screen
-				name="(tabs)"
+				name="rider"
 				options={{
-					headerTitle: "Tabs",
-					drawerLabel: ({ color, focused }) => (
-						<Text style={{ color: focused ? color : themeColorForeground }}>
-							Tabs
-						</Text>
+					headerTitle: "Rider Dashboard",
+					drawerLabel: "Rider",
+					drawerItemStyle: isRider ? undefined : { display: "none" },
+					drawerIcon: ({ size, color }) => (
+						<MaterialCommunityIcons
+							color={color}
+							name="bike-fast"
+							size={size}
+						/>
 					),
-					drawerIcon: ({ size, color, focused }) => (
+				}}
+			/>
+			<Drawer.Screen
+				name="admin"
+				options={{
+					headerTitle: "Admin Dashboard",
+					drawerLabel: "Admin",
+					drawerItemStyle: isAdmin ? undefined : { display: "none" },
+					drawerIcon: ({ size, color }) => (
 						<MaterialIcons
-							color={focused ? color : themeColorForeground}
-							name="border-bottom"
-							size={size}
-						/>
-					),
-					headerRight: () => (
-						<Link asChild href="/modal">
-							<Pressable className="mr-4">
-								<Ionicons
-									color={themeColorForeground}
-									name="add-outline"
-									size={24}
-								/>
-							</Pressable>
-						</Link>
-					),
-				}}
-			/>
-			<Drawer.Screen
-				name="todos"
-				options={{
-					headerTitle: "Todos",
-					drawerLabel: ({ color, focused }) => (
-						<Text style={{ color: focused ? color : themeColorForeground }}>
-							Todos
-						</Text>
-					),
-					drawerIcon: ({ size, color, focused }) => (
-						<Ionicons
-							color={focused ? color : themeColorForeground}
-							name="checkbox-outline"
+							color={color}
+							name="admin-panel-settings"
 							size={size}
 						/>
 					),
@@ -93,6 +86,6 @@ function DrawerLayout() {
 			/>
 		</Drawer>
 	);
-}
+};
 
 export default DrawerLayout;
