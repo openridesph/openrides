@@ -31,19 +31,66 @@ bun run dev:native
 bun run dev:server
 ```
 
-## Branching and Pull Requests
+## Development and PR Flow (Fork -> `dev`)
 
-- Branch from `main`.
+Follow this flow for all code contributions:
+
+1. Fork the repository to your GitHub account.
+2. Clone your fork locally.
+3. Add the main repository as `upstream`.
+4. Sync your local `dev` branch from `upstream/dev`.
+5. Create a feature branch from local `dev`.
+6. Implement changes and commit in focused units.
+7. Push your feature branch to your fork.
+8. Open a Pull Request from `your-fork/feature-branch` into `upstream/dev`.
+
+Example commands:
+
+```bash
+git clone https://github.com/<your-username>/openrides.git
+cd openrides
+git remote add upstream https://github.com/<org-or-owner>/openrides.git
+git fetch upstream
+git checkout dev
+git pull upstream dev
+git checkout -b feat/<short-description>
+```
+
+Branch naming conventions:
+- `feature/<short-description>` for new features
+- `bugfix/<short-description>` for defect fixes
+- `docs/<short-description>` for documentation-only changes
+- `chore/<short-description>` for maintenance/tooling work
+
+Examples:
+- `feature/role-based-signup`
+- `bugfix/native-auth-redirect`
+- `docs/update-dev-setup`
+- `chore/upgrade-convex-sdk`
+
+Push and open PR:
+
+```bash
+git push -u origin feat/<short-description>
+```
+
+PR target rules:
+- Base branch must be `dev` unless maintainers explicitly request another target.
 - Keep each PR focused on one problem area.
 - Use descriptive commit messages and PR titles.
-- Open draft PRs early when you want feedback on direction.
+- Open a draft PR early if you want feedback before final polish.
 
 Include in every PR:
 - What changed
 - Why it changed
-- Testing/validation notes
+- Testing and validation notes
 - Screenshots or video for UI changes
-- Explicit follow-ups (if anything is intentionally deferred)
+- Explicit follow-up items (if intentionally deferred)
+
+After review feedback:
+1. Push follow-up commits to the same branch.
+2. Resolve review comments with clear notes.
+3. Re-run checks before requesting re-review.
 
 For larger PRs, include a short review guide to help reviewers navigate files in order.
 

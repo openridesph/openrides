@@ -89,6 +89,14 @@ Required app env keys:
 
 Run from `packages/backend`:
 
+```bash
+bun convex env set BETTER_AUTH_SECRET=$(openssl rand -base64 32)
+bun convex env set SITE_URL http://localhost:3001
+bun convex env set ENVIRONMENT development
+```
+
+On Windows PowerShell:
+
 ```powershell
 bun convex env set BETTER_AUTH_SECRET "<your-random-secret>"
 bun convex env set SITE_URL http://localhost:3001
@@ -157,5 +165,6 @@ Future direction:
 
 - Product roadmap: [`openrides-masterplan.md`](./openrides-masterplan.md)
 - Setup deep-dive and troubleshooting: [`dev-env-setup.md`](./dev-env-setup.md)
+- Governance: [`GOVERNANCE.md`](./GOVERNANCE.md)
 - Contribution guide: [`CONTRIBUTING.md`](./CONTRIBUTING.md)
 - Community standards: [`CODE_OF_CONDUCT.md`](./CODE_OF_CONDUCT.md)
